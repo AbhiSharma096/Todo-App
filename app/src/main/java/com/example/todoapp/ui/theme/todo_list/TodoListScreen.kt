@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.todoapp.util.UiEvents
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -36,11 +37,9 @@ fun TodoListScreen(
       viewModel: TodoListViewModel = hiltViewModel()
 ) {
       val todos = viewModel.todos.collectAsState(initial = emptyList())
-      val scaffoldState = remember {
-            SnackbarHostState()
-      }
+      val scaffoldState = remember { SnackbarHostState() }
       LaunchedEffect(key1 = true) {
-            viewModel.uiEvents.collect { event ->
+            viewModel.uiEvents.collectLatest { event ->
                   when (event) {
                         is UiEvents.ShowSnackbar -> {
                               val result = scaffoldState.showSnackbar(
